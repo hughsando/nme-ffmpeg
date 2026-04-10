@@ -18,5 +18,7 @@ And, in this case, the NME_FFMPEG_SDK was set to "${haxelib:nme-ffmpeg}/sdl/ffmp
 The NME_FFMPEG_SDK should be set when building the ndll.
 It should also be set when building an NME project, unless NME_SYSTEM_FFMPEG is set, in which case it is assumed the dlls will be found in the system path.
 
+For macos, you can use homebrew to install ffmpeg, and point the SDK at, eg,  /usr/local/Cellar/ffmpeg/8.1
+
 
 

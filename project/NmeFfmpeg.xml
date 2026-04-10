@@ -7,7 +7,8 @@
  <!--<include name="toolchain/setup.xml" />-->
  <include name="${HXCPP}/toolchain/haxe-target.xml" />
 
- <set name="NME_FFMPEG_SDK" value= "${haxelib:nme-ffmpeg}/sdk/ffmpeg-n8.1-latest-win64-lgpl-shared-8.1" unless="NME_FFMPEG_SDK" />
+ <set name="NME_FFMPEG_SDK" value= "${haxelib:nme-ffmpeg}/sdk/ffmpeg-n8.1-latest-win64-lgpl-shared-8.1" unless="NME_FFMPEG_SDK" if="windows" />
+ <set name="NME_FFMPEG_SDK" value= "/usr/local/Cellar/ffmpeg/8.1" unless="NME_FFMPEG_SDK" if="macos" />
 
  <files id="nme-ffmpeg">
   <compilerflag value="-DSTATIC_LINK" if="NME_FFMPEG_STATIC_LINK" />
@@ -28,6 +29,14 @@
     <lib name="avutil.lib"  />
     <lib name="swscale.lib"  />
   </section>
+  <section if="macos">
+    <lib name="-L${NME_FFMPEG_SDK}/lib" />
+    <lib name="-lavformat"  />
+    <lib name="-lavcodec"  />
+    <lib name="-lavutil"  />
+    <lib name="-lswscale"  />
+  </section>
+
   <outdir name="../ndll/${BINDIR}" />
   <ext value=".ndll" />
  </target>
