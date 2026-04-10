@@ -1,7 +1,7 @@
 #ifndef NME_FFMPEG_INCLUDED
 #define NME_FFMPEG_INCLUDED
 
-#include "nme/NmeApi.h"
+#include "nme/ImageBuffer.h"
 
 #include <string>
 #include <vector>
@@ -21,6 +21,7 @@ public:
    virtual int getHeight() const = 0;
    virtual double getFrameRate() const = 0;
    virtual double getDuration() const = 0;
+   virtual bool readNextFrame(nme::ImageBuffer *buffer) = 0;
 
 };
 

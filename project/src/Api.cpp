@@ -134,6 +134,16 @@ double nffGetDuration(value inVideo)
 }
 DEFINE_PRIME1(nffGetDuration)
 
+bool nffGetNextFrame(value inVideo, value inBitmapData)
+{
+   TO_VIDEO
+   nme::ImageBuffer *buffer = toImageBuffer(inBitmapData);
+   if (!buffer)
+      nffThrow("Invalid bitmap data");
+   return video->readNextFrame(buffer);
+}
+DEFINE_PRIME2(nffGetNextFrame)
+
 
 
 } // namespace nff

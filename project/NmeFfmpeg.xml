@@ -26,6 +26,7 @@
     <lib name="avformat.lib"  />
     <lib name="avcodec.lib"  />
     <lib name="avutil.lib"  />
+    <lib name="swscale.lib"  />
   </section>
   <outdir name="../ndll/${BINDIR}" />
   <ext value=".ndll" />

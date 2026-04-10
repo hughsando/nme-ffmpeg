@@ -1,4 +1,5 @@
 package nff;
+import nme.display.BitmapData;
 
 
 class Video
@@ -17,6 +18,16 @@ class Video
 
    public function toString() return 'Video($width x $height, $frameRate fps, $duration seconds)';
 
+   public function createBitmapData() : BitmapData
+   {
+      return new BitmapData(width, height, false, 0x000000);
+   }
+
+   public function getNextFrame(bitmapData:BitmapData) : Bool
+   {
+      return nffGetNextFrame(nffHandle, bitmapData.nmeHandle);
+   }
+
    public function close() nffRelease(nffHandle);
 
 
@@ -26,11 +37,13 @@ class Video
    function get_duration() : Float return nffGetDuration(nffHandle);
 
 
+
    static var nffOpen = Loader.load("nffOpen", "oo");
    static var nffRelease = Loader.load("nffRelease", "ov");
    static var nffGetWidth = Loader.load("nffGetWidth", "oi");
    static var nffGetHeight = Loader.load("nffGetHeight", "oi");
    static var nffGetFrameRate = Loader.load("nffGetFrameRate", "od");
    static var nffGetDuration = Loader.load("nffGetDuration", "od");
+   static var nffGetNextFrame = Loader.load("nffGetNextFrame", "oob");
 
 }
