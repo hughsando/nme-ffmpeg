@@ -199,24 +199,73 @@ public:
 
    bool readNextFrame(nme::ImageBuffer *buffer )
    {
-      bool frame_extracted = false;
+      int ret;
 
-      while (av_read_frame(format_ctx, packet) >= 0 && !frame_extracted) {
-         if (packet->stream_index == video_stream_index) {
-               // Send packet to decoder
-               if (avcodec_send_packet(codec_ctx, packet) == 0) {
-                  // Receive decoded frame
-                  if (avcodec_receive_frame(codec_ctx, frame) == 0) {
-                     last_pts = frame->pts;
-                     frame_extracted = true;
-                  }
-               }
+      // First, try to receive any frames already buffered in the decoder
+      // This handles codecs like H.264 that buffer multiple frames
+      while (true) {
+         ret = avcodec_receive_frame(codec_ctx, frame);
+         
+         if (ret == 0) {
+            // Got a frame
+            last_pts = frame->pts;
+            return frameToBuffer(frame, buffer);
+         } else if (ret == AVERROR(EAGAIN)) {
+            // Decoder needs more packets
+            break;
+         } else if (ret == AVERROR_EOF) {
+            // End of stream
+            return false;
+         } else {
+            // Error
+            return false;
          }
-         av_packet_unref(packet);
       }
-      if (frame_extracted)
-         frame_extracted = frameToBuffer(frame, buffer);
-      return frame_extracted;
+
+      // Read packets and feed them to the decoder until we get a frame
+      while (av_read_frame(format_ctx, packet) >= 0) {
+         if (packet->stream_index == video_stream_index) {
+            ret = avcodec_send_packet(codec_ctx, packet);
+            av_packet_unref(packet);
+            
+            if (ret < 0) {
+               // Error sending packet
+               continue;
+            }
+
+            // Try to receive frame(s) from the decoder
+            while (true) {
+               ret = avcodec_receive_frame(codec_ctx, frame);
+               
+               if (ret == 0) {
+                  // Got a frame
+                  last_pts = frame->pts;
+                  return frameToBuffer(frame, buffer);
+               } else if (ret == AVERROR(EAGAIN)) {
+                  // Need more packets
+                  break;
+               } else if (ret == AVERROR_EOF) {
+                  return false;
+               } else {
+                  // Error
+                  break;
+               }
+            }
+         } else {
+            av_packet_unref(packet);
+         }
+      }
+
+      // No more packets - flush the decoder to get remaining frames
+      avcodec_send_packet(codec_ctx, nullptr);
+      
+      ret = avcodec_receive_frame(codec_ctx, frame);
+      if (ret == 0) {
+         last_pts = frame->pts;
+         return frameToBuffer(frame, buffer);
+      }
+
+      return false;
    }
 
    double getPixelAspectRatio() const
