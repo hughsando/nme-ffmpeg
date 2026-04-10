@@ -7,9 +7,12 @@
  <!--<include name="toolchain/setup.xml" />-->
  <include name="${HXCPP}/toolchain/haxe-target.xml" />
 
+ <set name="NME_FFMPEG_SDK" value= "${haxelib:nme-ffmpeg}/sdk/ffmpeg-n8.1-latest-win64-lgpl-shared-8.1" unless="NME_FFMPEG_SDK" />
+
  <files id="nme-ffmpeg">
   <compilerflag value="-DSTATIC_LINK" if="NME_FFMPEG_STATIC_LINK" />
   <compilerflag value="-I${haxelib:nme}/include" />
+  <compilerflag value="-I${NME_FFMPEG_SDK}/include/" />
   <depend name="src/NmeFfmpeg.h" />
   <file name="src/Api.cpp" />
   <file name="src/NmeFfmpeg.cpp" />
@@ -18,7 +21,12 @@
 
  <target id="nme-ffmpeg" tool="linker" toolid="${STD_MODULE_LINK}" output="nme-ffmpeg" >
   <files id="nme-ffmpeg"/>
-  <lib name="-ldl" if="linux" unless="static_link" />
+  <section if="windows">
+    <lib name="-LIBPATH:${NME_FFMPEG_SDK}/lib" />
+    <lib name="avformat.lib"  />
+    <lib name="avcodec.lib"  />
+    <lib name="avutil.lib"  />
+  </section>
   <outdir name="../ndll/${BINDIR}" />
   <ext value=".ndll" />
  </target>

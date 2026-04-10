@@ -119,6 +119,22 @@ int nffGetHeight(value inVideo)
 }
 DEFINE_PRIME1(nffGetHeight)
 
+double nffGetFrameRate(value inVideo)
+{
+   TO_VIDEO
+   return video->getFrameRate();
+}
+DEFINE_PRIME1(nffGetFrameRate)
+
+
+double nffGetDuration(value inVideo)
+{
+   TO_VIDEO
+   return video->getDuration();
+}
+DEFINE_PRIME1(nffGetDuration)
+
+
 
 } // namespace nff
 

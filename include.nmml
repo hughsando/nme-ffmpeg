@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+
+<set name="NME_FFMPEG_SDK" value= "${haxelib:nme-ffmpeg}/sdk/ffmpeg-n8.1-latest-win64-lgpl-shared-8.1" unless="NME_FFMPEG_SDK" />
+
+<section unless="NME_SYSTEM_FFMPEG" if="windows" >
+   <assets from="${NME_FFMPEG_SDK}/bin/" embed="false" >
+      <bytes name="avcodec-62.dll" />
+      <bytes name="avformat-62.dll" />
+      <bytes name="avutil-60.dll" />
+      <bytes name="avdevice-62.dll" />
+      <bytes name="swresample-6.dll" />
+      <bytes name="swscale-9.dll" />
+   </assets>
+</section>
+
+</project>

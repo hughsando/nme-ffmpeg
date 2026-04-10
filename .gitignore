@@ -1,0 +1,7 @@
+# Ignore everything in sdk directory except README.md
+/sdk/*
+!/sdk/README.md
+
+ndll/
+bin/
+obj/

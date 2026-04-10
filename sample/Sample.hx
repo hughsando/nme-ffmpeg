@@ -7,8 +7,17 @@ class Sample extends Sprite
    public function new()
    {
       super();
-      video = new Video("filename.mp4");
-      trace('Loaded video: $video');
+
+      var args = nme.system.System.getArgs();
+      if (args.length == 0)
+      {
+         trace("Usage: Sample <video file>");
+      }
+      else
+      {
+         video = new Video(args[0]);
+         trace('Loaded video: $video');
+      }
    }
 
 

@@ -19,6 +19,8 @@ public:
 
    virtual int getWidth() const = 0;
    virtual int getHeight() const = 0;
+   virtual double getFrameRate() const = 0;
+   virtual double getDuration() const = 0;
 
 };
 
