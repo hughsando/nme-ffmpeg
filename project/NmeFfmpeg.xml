@@ -1,0 +1,31 @@
+<xml>
+ <set name="HXCPP_CPP14" value="1" />
+ <set name="HXCPP_M64" value="1" if="windows" />
+ <setenv name="MACOSX_DEPLOYMENT_TARGET" value="10.10" />
+ <set name="target-id" value="NDLL" unless="NME_FFMPEG_STATIC_LINK" />
+
+ <!--<include name="toolchain/setup.xml" />-->
+ <include name="${HXCPP}/toolchain/haxe-target.xml" />
+
+ <files id="nme-ffmpeg">
+  <compilerflag value="-DSTATIC_LINK" if="NME_FFMPEG_STATIC_LINK" />
+  <compilerflag value="-I${haxelib:nme}/include" />
+  <depend name="src/NmeFfmpeg.h" />
+  <file name="src/Api.cpp" />
+  <file name="src/NmeFfmpeg.cpp" />
+ </files>
+
+
+ <target id="nme-ffmpeg" tool="linker" toolid="${STD_MODULE_LINK}" output="nme-ffmpeg" >
+  <files id="nme-ffmpeg"/>
+  <lib name="-ldl" if="linux" unless="static_link" />
+  <outdir name="../ndll/${BINDIR}" />
+  <ext value=".ndll" />
+ </target>
+
+ <target id="default"  >
+   <target id="nme-ffmpeg"/>
+ </target>
+
+</xml>
+

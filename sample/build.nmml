@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+  
+  <meta
+     title="NME FFMPEG"
+     package="com.nmehost.sample"
+     version="1.0.0"
+     company="nme" 
+  />
+  
+  <app
+     file="NmeFfmpeg" 
+     main="Sample"
+     bootType="addStage"
+  />
+  
+  <window
+     width="640" 
+     height="480" 
+     orientation="landscape" 
+     fps="60"
+     background="0xeeeeee"
+     require_shaders="true"
+     resizable="true"
+     hardware="true"
+  />
+
+  <haxelib name="nme" />
+  <ndll name="nme-ffmpeg" />
+  
+</project>
