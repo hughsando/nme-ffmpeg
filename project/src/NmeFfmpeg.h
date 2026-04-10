@@ -21,6 +21,9 @@ public:
    virtual int getHeight() const = 0;
    virtual double getFrameRate() const = 0;
    virtual double getDuration() const = 0;
+   virtual double getPosition() const = 0;
+   virtual void setPosition(double position) = 0;
+   virtual double getPixelAspectRatio() const = 0;  
    virtual bool readNextFrame(nme::ImageBuffer *buffer) = 0;
 
 };

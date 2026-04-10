@@ -24,6 +24,7 @@ class NmeVideo : public INmeVideo
    int sws_dst_width = 0;
    int sws_dst_height = 0;
    int video_stream_index = -1;
+   int64_t last_pts = AV_NOPTS_VALUE;
 
    int frameWidth = 0;
    int frameHeight = 0;
@@ -206,6 +207,7 @@ public:
                if (avcodec_send_packet(codec_ctx, packet) == 0) {
                   // Receive decoded frame
                   if (avcodec_receive_frame(codec_ctx, frame) == 0) {
+                     last_pts = frame->pts;
                      frame_extracted = true;
                   }
                }
@@ -215,6 +217,37 @@ public:
       if (frame_extracted)
          frame_extracted = frameToBuffer(frame, buffer);
       return frame_extracted;
+   }
+
+   double getPixelAspectRatio() const
+   {
+      if (format_ctx && video_stream_index >= 0) {
+         AVRational sar = format_ctx->streams[video_stream_index]->sample_aspect_ratio;
+         if (sar.num > 0 && sar.den > 0) {
+            return av_q2d(sar);
+         }
+      }
+      return 1.0; // Default to square pixels if not specified
+   }
+
+   double getPosition() const
+   {
+      if (last_pts != AV_NOPTS_VALUE && format_ctx && video_stream_index >= 0) {
+         AVRational time_base = format_ctx->streams[video_stream_index]->time_base;
+         return last_pts * av_q2d(time_base);
+      }
+      return 0.0;
+   }
+
+   void setPosition(double position)
+   {
+      if (format_ctx && video_stream_index >= 0) {
+         AVRational time_base = format_ctx->streams[video_stream_index]->time_base;
+         int64_t target_pts = static_cast<int64_t>(position / av_q2d(time_base));
+         av_seek_frame(format_ctx, video_stream_index, target_pts, AVSEEK_FLAG_BACKWARD);
+         avcodec_flush_buffers(codec_ctx);
+         last_pts = AV_NOPTS_VALUE; // Reset last_pts since we seeked
+      }
    }
 
    ~NmeVideo()

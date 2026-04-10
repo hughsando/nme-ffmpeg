@@ -144,6 +144,26 @@ bool nffGetNextFrame(value inVideo, value inBitmapData)
 }
 DEFINE_PRIME2(nffGetNextFrame)
 
+double nffGetPosition(value inVideo)
+{
+   TO_VIDEO
+   return video->getPosition();
+}
+DEFINE_PRIME1(nffGetPosition)
+
+void nffSetPosition(value inVideo, double inPosition)
+{
+   TO_VIDEO
+   video->setPosition(inPosition);
+}
+DEFINE_PRIME2v(nffSetPosition)
+
+double nffGetPixelAspectRatio(value inVideo)
+{
+   TO_VIDEO
+   return video->getPixelAspectRatio();
+}
+DEFINE_PRIME1(nffGetPixelAspectRatio)
 
 
 } // namespace nff

@@ -10,6 +10,8 @@ class Video
    public var height(get,null) : Int;
    public var frameRate(get,null) : Float;
    public var duration(get,null) : Float;
+   public var position(get,set) : Float;
+   public var pixelAspectRatio(get,null) : Float;
 
    public function new(filename:String)
    {
@@ -35,6 +37,9 @@ class Video
    function get_height() : Int return nffGetHeight(nffHandle);
    function get_frameRate() : Float return nffGetFrameRate(nffHandle);
    function get_duration() : Float return nffGetDuration(nffHandle);
+   function get_position() : Float return nffGetPosition(nffHandle);
+   function set_position(value:Float) : Float { nffSetPosition(nffHandle, value); return value; }
+   function get_pixelAspectRatio() : Float return nffGetPixelAspectRatio(nffHandle);
 
 
 
@@ -44,6 +49,9 @@ class Video
    static var nffGetHeight = Loader.load("nffGetHeight", "oi");
    static var nffGetFrameRate = Loader.load("nffGetFrameRate", "od");
    static var nffGetDuration = Loader.load("nffGetDuration", "od");
+   static var nffGetPosition = Loader.load("nffGetPosition", "od");
+   static var nffSetPosition = Loader.load("nffSetPosition", "odv");
    static var nffGetNextFrame = Loader.load("nffGetNextFrame", "oob");
+   static var nffGetPixelAspectRatio = Loader.load("nffGetPixelAspectRatio", "od");
 
 }
